@@ -1,6 +1,6 @@
 import React, { Component }  from "react";
 import { nanoid } from "nanoid";
-import { Form } from "./ContactForm.styled";
+import { Form, Input, SubmitButton } from "./ContactForm.styled";
 
 export class ContactForm extends Component {
     state = {
@@ -20,11 +20,6 @@ export class ContactForm extends Component {
         event.preventDefault();
 
         this.props.onSubmit(this.state)
-        // this.props.contacts.push({
-        //     id: nanoid(), 
-        //     name: this.state.name,
-        //     number: this.state.number,
-        // })
         this.resetForm();
         // console.dir(this.state.contacts)
     }
@@ -35,20 +30,12 @@ export class ContactForm extends Component {
             number: '',
         })
     }
-        // this.setState(() => {
-        //   this.state.contacts.push({ 
-            // id: nanoid(), 
-            // name: this.state.name,
-            // number: this.state.number,
-        //   })
-    // }
-    // )
 
     render() {
         return (
             <Form onSubmit={this.handleSubmitForm}>
                 <label htmlFor={this.inputNameId}>Name</label>
-                    <input
+                    <Input
                     id={this.inputNameId}
                     type="text"
                     value={this.state.name}
@@ -59,7 +46,7 @@ export class ContactForm extends Component {
                     onChange={this.handleInputChange}
                     />
                 <label htmlFor={this.inputNumberId}>Number</label>
-                    <input
+                    <Input
                     id={this.inputNumberId}
                     type="tel"
                     value={this.state.number}
@@ -69,7 +56,7 @@ export class ContactForm extends Component {
                     required
                     onChange={this.handleInputChange}
                     />
-                <button type="submit">Add contact</button>
+                <SubmitButton type="submit">Add contact</SubmitButton>
             </Form>
         )
     }

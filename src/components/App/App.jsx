@@ -2,51 +2,49 @@ import React, { Component }  from "react";
 import { nanoid } from "nanoid";
 import { Wrapper } from "./App.styled";
 import { ContactForm } from "components/ContactForm/ContactForm";
+import { ContactList } from "components/ContactList/ContactList";
+import { Filter } from "components/Filter/Filter";
 // import { Form } from "components/Form/Form.styled";
 
 export class App extends Component {
   state = {
+    // contacts: [
+    //   {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
+    //   {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
+    //   {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
+    //   {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+    // ],
     contacts: [],
     filter: '',
   }
 
-  inputSearchId = nanoid();
-
-  handleInputChange = (event) => {
+  handleFilter = (event) => {
     const { name, value } = event.currentTarget
+    console.log(name)
     this.setState({ [name]: value })
   }
 
   handlerSubmit = data => {
-    this.setState(() => {
-      this.state.contacts.push({
-          id: nanoid(), 
-          name: data.name,
-          number: data.number,
+    const contact = {
+      id: nanoid(), 
+      name: data.name,
+      number: data.number,
+    }
+    const alertMessage = `${contact.name} is already in contacts.`
+    const newContact = this.state.contacts.map(contactEl => contactEl.name)
+    if (!newContact.includes(contact.name)) {
+      this.setState({
+        contacts: [contact, ...this.state.contacts]
       })
-    })
-    console.log(this.state.contacts)
+    } else {
+        alert(alertMessage)
+    }
   }
 
-  // handleSubmitForm = (event) => {
-  //   event.preventDefault();
-  //   this.setState(() => {
-  //     this.state.contacts.push({ 
-  //       id: nanoid(), 
-  //       name: this.state.name,
-  //       number: this.state.number,
-  //     })
-  //   })
-
-  //   this.resetForm();
-  //   console.dir(this.state.contacts)
-  // }
-
-  resetForm = () => {
-    this.setState({
-      name: '', 
-      number: '',
-    })
+  handleDeleteContact = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id)
+    }))
   }
 
   render() {
@@ -58,54 +56,9 @@ export class App extends Component {
       <Wrapper>
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.handlerSubmit} contacts={contactListArray}/>
-        {/* <Form onSubmit={this.handleSubmitForm}>
-          <label htmlFor={this.inputNameId}>Name</label>
-            <input
-              id={this.inputNameId}
-              type="text"
-              value={this.state.name}
-              name="name"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-              required
-              onChange={this.handleInputChange}
-            />
-          <label htmlFor={this.inputNumberId}>Number</label>
-            <input
-              id={this.inputNumberId}
-              type="tel"
-              value={this.state.number}
-              name="number"
-              pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-              title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-              required
-              onChange={this.handleInputChange}
-            />
-          <button type="submit">Add contact</button>
-        </Form> */}
         <h2>Contacts:</h2>
-        {/* <Filter ... /> */}
-        <label htmlFor={this.inputSearchId}>
-          Find contacts by name
-        </label>
-        <input 
-          type="text" 
-          name="filter"
-          value={this.state.filter}
-          id={this.inputSearchId}
-          onChange={this.handleInputChange}
-        />
-        {/* <ContactList ... /> */}
-        <ul>
-          {
-            filteredContacts.length > 0 
-            ?
-            filteredContacts.map(contact => <li key={contact.id}>{contact.name}: {contact.number}</li>)
-            : 
-            <p>Contact list is empty</p>
-          }
-        </ul>
-
+        <Filter filteredValue={filterValueToLoverCase} onChange={this.handleFilter} />
+        <ContactList data={filteredContacts} onDeleteContact={this.handleDeleteContact} />
       </Wrapper>
     );
   }

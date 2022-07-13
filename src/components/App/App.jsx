@@ -17,6 +17,20 @@ export class App extends Component {
     contacts: [],
     filter: '',
   }
+  
+  componentDidMount(prevProps, prevState) {
+    const contacts = JSON.parse(localStorage.getItem('contacts'));
+
+    if (contacts) {
+      this.setState({ contacts })
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
+    }
+  }
 
   handleFilter = (event) => {
     const { name, value } = event.currentTarget
@@ -47,6 +61,12 @@ export class App extends Component {
     }))
   }
 
+  handleChangeContact = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id)
+    }))
+  }
+
   render() {
     const contactListArray = this.state.contacts;
     const filterValueToLoverCase = this.state.filter.toLowerCase();
@@ -58,7 +78,11 @@ export class App extends Component {
         <ContactForm onSubmit={this.handlerSubmit} contacts={contactListArray}/>
         <h2>Contacts:</h2>
         <Filter filteredValue={filterValueToLoverCase} onChange={this.handleFilter} />
-        <ContactList data={filteredContacts} onDeleteContact={this.handleDeleteContact} />
+        <ContactList 
+          data={filteredContacts} 
+          onDeleteContact={this.handleDeleteContact} 
+          onChangeContact={this.handleChangeContact}
+        />
       </Wrapper>
     );
   }

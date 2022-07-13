@@ -8,9 +8,13 @@ export const ContactEl = styled.li`
 `
 
 export const DeleteButton = styled.button`
-    margin-left: 10px;
+    margin-left: 30px;
 
     :hover {
         background-color: aquamarine;
     }
+`
+
+export const ContactNumber = styled.span`
+    margin-left: auto;
 `
